@@ -1,7 +1,7 @@
 services:
-  request-server:
+  webflux-app:
     build:
-      context: ./request-server
+      context: ./webflux-app
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
@@ -9,6 +9,23 @@ services:
       - spring-webflux-sample-nw
     healthcheck:
       test: "curl -f http://localhost:8080/actuator/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - request-server
+
+  request-server:
+    build:
+      context: ./request-server
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    networks:
+      - spring-webflux-sample-nw
+    healthcheck:
+      test: "curl -f http://localhost:8081/actuator/health || exit 1"
       interval: 5s
       timeout: 5s
       retries: 3
