@@ -1,7 +1,7 @@
 services:
-  webflux-app:
+  call-api-app:
     build:
-      context: ./webflux-app
+      context: ./call-api-app
       dockerfile: Dockerfile
     ports:
       - "8080:8080"

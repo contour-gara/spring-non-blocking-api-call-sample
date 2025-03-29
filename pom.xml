@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>webflux-app</module>
+        <module>call-api-app</module>
         <module>request-server</module>
     </modules>
 </project>

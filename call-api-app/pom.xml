@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>webflux-app</artifactId>
+    <artifactId>call-api-app</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
