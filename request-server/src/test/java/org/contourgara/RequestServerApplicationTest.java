@@ -9,11 +9,11 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 class RequestServerApplicationTest {
     @Autowired
-    Temp temp;
+    ThreadSleepController threadSleepController;
 
     @Test
     void contextLoads() {
         // assert
-        assertThat(temp).isNotNull();
+        assertThat(threadSleepController).isNotNull();
     }
 }
