@@ -39,4 +39,11 @@ public class CallApiController {
         completableFutureUseCase.execute();
     }
 
+    @GetMapping("/async")
+    @ResponseStatus(HttpStatus.OK)
+    public void callApiByAsync() {
+        requestId.setRequestId("async-%s".formatted(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
+        log.info("Request ID: {}", requestId.getRequestId());
+        asyncUseCase.execute();
+    }
 }

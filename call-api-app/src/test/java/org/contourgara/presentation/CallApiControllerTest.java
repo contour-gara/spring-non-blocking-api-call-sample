@@ -55,4 +55,14 @@ class CallApiControllerTest {
                 .then()
                 .statusCode(200);
     }
+
+    @Test
+    void asyncエンドポイントにアクセスした場合200が返る() {
+        // execute & assert
+        given()
+                .when()
+                .get("/async")
+                .then()
+                .statusCode(200);
+    }
 }
