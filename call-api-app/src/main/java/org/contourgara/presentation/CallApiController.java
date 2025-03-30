@@ -30,4 +30,13 @@ public class CallApiController {
         log.info("Request ID: {}", requestId.getRequestId());
         webClientUseCase.execute();
     }
+
+    @GetMapping("/completable-future")
+    @ResponseStatus(HttpStatus.OK)
+    public void callApiByCompletableFuture() {
+        requestId.setRequestId("completable-future-%s".formatted(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
+        log.info("Request ID: {}", requestId.getRequestId());
+        completableFutureUseCase.execute();
+    }
+
 }

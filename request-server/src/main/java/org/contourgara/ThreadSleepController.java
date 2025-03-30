@@ -12,7 +12,7 @@ public class ThreadSleepController {
     @GetMapping("/thread-sleep")
     Map<String, String> threadSleep(@RequestHeader("X-Request-Id") String requestId) throws InterruptedException {
         log.info("Request ID: {}", requestId);
-        Thread.sleep(10000);
+        Thread.sleep(5000);
         return Map.of("requestId", requestId);
     }
 }
