@@ -2,7 +2,7 @@ package org.contourgara.presentation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.contourgara.bean.RequestId;
+import org.contourgara.common.RequestId;
 import org.contourgara.application.AsyncUseCase;
 import org.contourgara.application.CompletableFutureUseCase;
 import org.contourgara.application.WebClientUseCase;

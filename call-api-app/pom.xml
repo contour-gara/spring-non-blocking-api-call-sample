@@ -19,6 +19,7 @@
 
         <spring-boot.version>3.4.4</spring-boot.version>
         <rest-assured.version>5.5.1</rest-assured.version>
+        <wiremock.version>3.12.1</wiremock.version>
 
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
     </properties>
@@ -74,6 +75,12 @@
             <groupId>io.rest-assured</groupId>
             <artifactId>spring-mock-mvc</artifactId>
             <version>${rest-assured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-jetty12</artifactId>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

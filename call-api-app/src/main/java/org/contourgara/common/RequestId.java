@@ -1,4 +1,4 @@
-package org.contourgara.bean;
+package org.contourgara.common;
 
 import lombok.Data;
 import org.springframework.context.annotation.Scope;

@@ -4,7 +4,7 @@ import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.contourgara.application.AsyncUseCase;
 import org.contourgara.application.CompletableFutureUseCase;
 import org.contourgara.application.WebClientUseCase;
-import org.contourgara.bean.RequestId;
+import org.contourgara.common.RequestId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
