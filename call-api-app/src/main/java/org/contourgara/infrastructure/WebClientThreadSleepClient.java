@@ -8,7 +8,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.List;
 
-@Repository("webclient")
+@Repository("web-client")
 public class WebClientThreadSleepClient implements ThreadSleepClient {
     private final RequestId requestId;
     private final WebClient webClient;

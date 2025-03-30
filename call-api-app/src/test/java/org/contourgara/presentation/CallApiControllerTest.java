@@ -41,8 +41,18 @@ class CallApiControllerTest {
         // execute & assert
         given()
                 .when()
-                .get("/webclient")
+                .get("/web-client")
                 .then()
                 .statusCode(200);
     }
+
+//    @Test
+//    void completablefutureエンドポイントにアクセスした場合200が返る() {
+//        // execute & assert
+//        given()
+//                .when()
+//                .get("/completable-future")
+//                .then()
+//                .statusCode(200);
+//    }
 }

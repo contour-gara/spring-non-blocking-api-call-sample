@@ -23,11 +23,11 @@ public class CallApiController {
     private final AsyncUseCase asyncUseCase;
     private final RequestId requestId;
 
-    @GetMapping("/webclient")
+    @GetMapping("/web-client")
     @ResponseStatus(HttpStatus.OK)
     public void callApiByWebClient() {
-        requestId.setRequestId("webclient-%s".formatted(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
-        log.info("RequestId: {}", requestId.getRequestId());
+        requestId.setRequestId("web-client-%s".formatted(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
+        log.info("Request ID: {}", requestId.getRequestId());
         webClientUseCase.execute();
     }
 }

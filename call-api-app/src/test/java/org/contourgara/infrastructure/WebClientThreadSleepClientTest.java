@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 @WireMockTest(httpPort = 8081)
 class WebClientThreadSleepClientTest {
     @Autowired
-    @Qualifier("webclient")
+    @Qualifier("web-client")
     ThreadSleepClient sut;
 
     @MockitoBean
@@ -27,35 +27,35 @@ class WebClientThreadSleepClientTest {
     @Test
     void apiが3回非同期で呼び出される() {
         // setup
-        doReturn("webclient").when(requestId).getRequestId();
+        doReturn("web-client").when(requestId).getRequestId();
 
         stubFor(
                 get(urlEqualTo("/thread-sleep"))
-                        .withHeader("X-Request-Id", equalTo("webclient-1"))
+                        .withHeader("X-Request-Id", equalTo("web-client-1"))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withBody("{\"requestId\":\"webclient-1\"}")
+                                        .withBody("{\"requestId\":\"web-client-1\"}")
                         )
         );
 
         stubFor(
                 get(urlEqualTo("/thread-sleep"))
-                        .withHeader("X-Request-Id", equalTo("webclient-2"))
+                        .withHeader("X-Request-Id", equalTo("web-client-2"))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withBody("{\"requestId\":\"webclient-2\"}")
+                                        .withBody("{\"requestId\":\"web-client-2\"}")
                         )
         );
 
         stubFor(
                 get(urlEqualTo("/thread-sleep"))
-                        .withHeader("X-Request-Id", equalTo("webclient-3"))
+                        .withHeader("X-Request-Id", equalTo("web-client-3"))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
-                                        .withBody("{\"requestId\":\"webclient-3\"}")
+                                        .withBody("{\"requestId\":\"web-client-3\"}")
                         )
         );
 
@@ -63,7 +63,8 @@ class WebClientThreadSleepClientTest {
         List<String> actual = sut.fetch();
 
         // assert
-        List<String> expected = List.of("{\"requestId\":\"webclient-1\"}", "{\"requestId\":\"webclient-2\"}", "{\"requestId\":\"webclient-3\"}");
-        assertThat(actual).isEqualTo(expected);
+        List<String> expected = List.of("{\"requestId\":\"web-client-1\"}", "{\"requestId\":\"web-client-2\"}", "{\"requestId\":\"web-client-3\"}");
+//        assertThat(actual).isEqualTo(expected);  // 順番通りでない場合がある
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 }
