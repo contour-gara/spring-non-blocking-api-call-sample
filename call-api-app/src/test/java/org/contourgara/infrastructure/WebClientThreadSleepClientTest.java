@@ -64,7 +64,6 @@ class WebClientThreadSleepClientTest {
 
         // assert
         List<String> expected = List.of("{\"requestId\":\"web-client-1\"}", "{\"requestId\":\"web-client-2\"}", "{\"requestId\":\"web-client-3\"}");
-//        assertThat(actual).isEqualTo(expected);  // 順番通りでない場合がある
-        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
+        assertThat(actual).isEqualTo(expected);
     }
 }

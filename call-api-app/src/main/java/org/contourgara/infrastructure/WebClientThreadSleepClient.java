@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Repository("web-client")
 public class WebClientThreadSleepClient implements ThreadSleepClient {
@@ -23,18 +24,18 @@ public class WebClientThreadSleepClient implements ThreadSleepClient {
 
     @Override
     public List<String> fetch() {
-        Flux<String> responses = Flux.empty();
-
-        for (int i = 1; i <= 3; i++) {
-            responses = responses.mergeWith(
-                    webClient.get()
-                            .uri("/thread-sleep")
-                            .header("X-Request-Id", "%s-%s".formatted(requestId.getRequestId(), i))
-                            .retrieve()
-                            .bodyToFlux(String.class)
-            );
-        }
-
-        return responses.collectList().block();
+        return Flux.mergeSequential( // merge では順番保証されない
+                Flux.fromStream(
+                        IntStream.rangeClosed(1, 3)
+                                .mapToObj(i -> webClient.get()
+                                        .uri("/thread-sleep")
+                                        .header("X-Request-Id", "%s-%s".formatted(requestId.getRequestId(), i))
+                                        .retrieve()
+                                        .bodyToFlux(String.class)
+                                )
+                )
+        )
+                .collectList()
+                .block();
     }
 }
