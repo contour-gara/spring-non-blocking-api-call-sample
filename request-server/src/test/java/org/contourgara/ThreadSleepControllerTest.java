@@ -31,7 +31,7 @@ class ThreadSleepControllerTest {
         given()
                 .header("X-Request-Id", requestId)
                 .when()
-                .get("/threadSleep")
+                .get("/thread-sleep")
                 .then()
                 .statusCode(200)
                 .body("requestId", equalTo(requestId));

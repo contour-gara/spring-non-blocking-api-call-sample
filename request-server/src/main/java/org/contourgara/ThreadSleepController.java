@@ -9,7 +9,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 public class ThreadSleepController {
-    @GetMapping("/threadSleep")
+    @GetMapping("/thread-sleep")
     Map<String, String> threadSleep(@RequestHeader("X-Request-Id") String requestId) throws InterruptedException {
         log.info("Request ID: {}", requestId);
         Thread.sleep(10000);
