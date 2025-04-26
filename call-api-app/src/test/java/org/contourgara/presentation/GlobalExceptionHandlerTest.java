@@ -48,7 +48,6 @@ class GlobalExceptionHandlerTest {
                         .willReturn(
                                 aResponse()
                                         .withStatus(400)
-                                        .withBody("{\"requestId\":\"web-client-2\"}")
                         )
         );
 
@@ -66,6 +65,49 @@ class GlobalExceptionHandlerTest {
         given()
                 .when()
                 .get("/web-client")
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
+    void CompletableFutureのエンドポイントで400の場合400を返す() {
+        // setup
+        doReturn("completable-future").when(requestId).getRequestId();
+
+        stubFor(
+                get(urlEqualTo("/thread-sleep"))
+                        .withHeader("X-Request-Id", equalTo("completable-future-1"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withBody("{\"requestId\":\"completable-future-1\"}")
+                                        .withFixedDelay(10000)
+                        )
+        );
+
+        stubFor(
+                get(urlEqualTo("/thread-sleep"))
+                        .withHeader("X-Request-Id", equalTo("completable-future-2"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(400)
+                        )
+        );
+
+        stubFor(
+                get(urlEqualTo("/thread-sleep"))
+                        .withHeader("X-Request-Id", equalTo("completable-future-3"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withBody("{\"requestId\":\"completable-future-3\"}")
+                        )
+        );
+
+        // execute & assert
+        given()
+                .when()
+                .get("/completable-future")
                 .then()
                 .statusCode(400);
     }

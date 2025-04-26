@@ -1,7 +1,9 @@
 package org.contourgara.infrastructure;
 
+import lombok.extern.slf4j.Slf4j;
 import org.contourgara.common.AppConfig;
 import org.contourgara.common.RequestId;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClient;
 
@@ -10,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
 @Repository("completable-future")
+@Slf4j
 public class CompletableFutureThreadSleepClient implements ThreadSleepClient {
     private final RequestId requestId;
     private final RestClient restClient;
@@ -44,6 +47,10 @@ public class CompletableFutureThreadSleepClient implements ThreadSleepClient {
                 .uri("/thread-sleep")
                 .header("X-Request-Id", "%s-%s".formatted(requestId, count))
                 .retrieve()
+                .onStatus(HttpStatusCode::is2xxSuccessful, (request, response) -> log.info("{}: リクエスト成功", "%s-%s".formatted(requestId, count)))
+                .onStatus(HttpStatusCode::isError, (request, response) -> {
+                    throw new RuntimeException(response.getStatusText());
+                })
                 .body(String.class);
     }
 }
