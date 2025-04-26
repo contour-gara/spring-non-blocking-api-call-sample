@@ -1,4 +1,4 @@
-# spring-webflux-sample
+# spring-non-blocking-api-call-sample
 
 ## Quick start
 

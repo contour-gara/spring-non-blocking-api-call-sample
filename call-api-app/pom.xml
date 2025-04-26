@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.contourgara</groupId>
-        <artifactId>spring-webflux-sample</artifactId>
+        <artifactId>spring-non-blocking-api-call-sample</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
