@@ -25,7 +25,7 @@ class WebClientThreadSleepClientTest {
     RequestId requestId;
 
     @Test
-    void apiが3回非同期で呼び出される() {
+    void APIが3回非同期で呼び出される() {
         // setup
         doReturn("web-client").when(requestId).getRequestId();
 
@@ -36,6 +36,7 @@ class WebClientThreadSleepClientTest {
                                 aResponse()
                                         .withStatus(200)
                                         .withBody("{\"requestId\":\"web-client-1\"}")
+                                        .withFixedDelay(30000)
                         )
         );
 
@@ -66,4 +67,45 @@ class WebClientThreadSleepClientTest {
         List<String> expected = List.of("{\"requestId\":\"web-client-1\"}", "{\"requestId\":\"web-client-2\"}", "{\"requestId\":\"web-client-3\"}");
         assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    void _2回目のAPI呼び出しで400が返った場合例外を投げる() {
+        // setup
+        doReturn("web-client").when(requestId).getRequestId();
+
+        stubFor(
+                get(urlEqualTo("/thread-sleep"))
+                        .withHeader("X-Request-Id", equalTo("web-client-1"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withBody("{\"requestId\":\"web-client-1\"}")
+                                        .withFixedDelay(30000)
+                        )
+        );
+
+        stubFor(
+                get(urlEqualTo("/thread-sleep"))
+                        .withHeader("X-Request-Id", equalTo("web-client-2"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(400)
+                        )
+        );
+
+        stubFor(
+                get(urlEqualTo("/thread-sleep"))
+                        .withHeader("X-Request-Id", equalTo("web-client-3"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withBody("{\"requestId\":\"web-client-3\"}")
+                        )
+        );
+
+        // execute & assert
+        assertThatThrownBy(() -> sut.fetch())
+                .isInstanceOf(RuntimeException.class);
+    }
+
 }
