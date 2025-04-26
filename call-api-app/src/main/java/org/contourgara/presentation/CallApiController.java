@@ -2,6 +2,7 @@ package org.contourgara.presentation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.contourgara.application.VirtualThreadsUseCase;
 import org.contourgara.common.RequestId;
 import org.contourgara.application.AsyncUseCase;
 import org.contourgara.application.CompletableFutureUseCase;
@@ -21,6 +22,7 @@ public class CallApiController {
     private final WebClientUseCase webClientUseCase;
     private final CompletableFutureUseCase completableFutureUseCase;
     private final AsyncUseCase asyncUseCase;
+    private final VirtualThreadsUseCase virtualThreadsUseCase;
     private final RequestId requestId;
 
     @GetMapping("/web-client")
@@ -45,5 +47,13 @@ public class CallApiController {
         requestId.setRequestId("async-%s".formatted(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
         log.info("Request ID: {}", requestId.getRequestId());
         asyncUseCase.execute();
+    }
+
+    @GetMapping("/virtual-threads")
+    @ResponseStatus(HttpStatus.OK)
+    public void callVirtualThreads() {
+        requestId.setRequestId("virtual-threads-%s".formatted(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
+        log.info("Request ID: {}", requestId.getRequestId());
+        virtualThreadsUseCase.execute();
     }
 }

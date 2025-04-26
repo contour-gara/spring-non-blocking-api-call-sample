@@ -111,4 +111,47 @@ class GlobalExceptionHandlerTest {
                 .then()
                 .statusCode(400);
     }
+
+    @Test
+    void VirtualThreadsのエンドポイントで400の場合400を返す() {
+        // setup
+        doReturn("virtual-threads").when(requestId).getRequestId();
+
+        stubFor(
+                get(urlEqualTo("/thread-sleep"))
+                        .withHeader("X-Request-Id", equalTo("virtual-threads-1"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withBody("{\"requestId\":\"virtual-threads-1\"}")
+                                        .withFixedDelay(10000)
+                        )
+        );
+
+        stubFor(
+                get(urlEqualTo("/thread-sleep"))
+                        .withHeader("X-Request-Id", equalTo("virtual-threads-2"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(400)
+                        )
+        );
+
+        stubFor(
+                get(urlEqualTo("/thread-sleep"))
+                        .withHeader("X-Request-Id", equalTo("virtual-threads-3"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withBody("{\"requestId\":\"virtual-threads-3\"}")
+                        )
+        );
+
+        // execute & assert
+        given()
+                .when()
+                .get("/virtual-threads")
+                .then()
+                .statusCode(400);
+    }
 }
