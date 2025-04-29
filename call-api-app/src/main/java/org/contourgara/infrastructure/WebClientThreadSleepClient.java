@@ -6,6 +6,7 @@ import org.contourgara.common.RequestId;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
@@ -39,7 +40,7 @@ public class WebClientThreadSleepClient implements ThreadSleepClient {
                                         .doOnRequest($ -> log.info("{}: リクエスト実行", "%s-%s".formatted(requestId.getRequestId(), i)))
                                         .doOnSuccess($ -> log.info("{}: リクエスト成功", "%s-%s".formatted(requestId.getRequestId(), i)))
                                         .doOnError($ -> log.info("{}: リクエスト失敗", "%s-%s".formatted(requestId.getRequestId(), i)))
-                                        .retryWhen(Retry.fixedDelay(4, Duration.ofSeconds(3L))
+                                        .retryWhen(Retry.fixedDelay(4, Duration.ofSeconds(1L))
                                                 .onRetryExhaustedThrow((spec, signal) -> new RuntimeException(signal.failure()))
                                                 .doAfterRetry(signal -> log.warn("{}: リトライ {} 回目", "%s-%s".formatted(requestId.getRequestId(), i), signal.totalRetries() + 1))))
                 )

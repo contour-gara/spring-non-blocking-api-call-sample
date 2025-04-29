@@ -38,7 +38,7 @@ class GlobalExceptionHandlerTest {
                                 aResponse()
                                         .withStatus(200)
                                         .withBody("{\"requestId\":\"web-client-1\"}")
-                                        .withFixedDelay(30000)
+                                        .withFixedDelay(10000)
                         )
         );
 
