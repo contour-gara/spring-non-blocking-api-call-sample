@@ -8,9 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 @Repository("virtual-threads")
@@ -33,26 +31,31 @@ public class VirtualThreadsThreadSleepClient implements ThreadSleepClient {
             List<CompletableFuture<String>> futures = IntStream.rangeClosed(1, 3)
                     .mapToObj(
                             i -> CompletableFuture.supplyAsync(
-                                    () -> callApi(requestId.getRequestId(), String.valueOf(i)),
+                                    () -> callApi(String.valueOf(i)),
                                     executorService
                             )
                     )
-                    .toList();  // List ではないと非同期で実行されない
-
-            return futures.stream()
-                    .map(CompletableFuture::join)
                     .toList();
+
+            try {
+                return futures.stream()
+                        .map(CompletableFuture::join)
+                        .toList();
+            } catch (CompletionException e) {
+                if (e.getCause() instanceof CustomException customException) throw customException;
+                throw e;
+            }
         }
     }
 
-    private String callApi(String requestId, String count) {
+    private String callApi(String count) {
         return restClient.get()
                 .uri("/thread-sleep")
-                .header("X-Request-Id", "%s-%s".formatted(requestId, count))
+                .header("X-Request-Id", "%s-%s".formatted(requestId.getRequestId(), count))
                 .retrieve()
                 .onStatus(HttpStatusCode::is2xxSuccessful, (request, response) -> log.info("{}: リクエスト成功", "%s-%s".formatted(requestId, count)))
                 .onStatus(HttpStatusCode::isError, (request, response) -> {
-                    throw new RuntimeException(response.getStatusText());
+                    throw new CustomException(response.getStatusText());
                 })
                 .body(String.class);
     }
