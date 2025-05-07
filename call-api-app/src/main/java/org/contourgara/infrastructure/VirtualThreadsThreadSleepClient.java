@@ -1,5 +1,6 @@
 package org.contourgara.infrastructure;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.contourgara.common.AppConfig;
 import org.contourgara.common.RequestId;
@@ -28,23 +29,20 @@ public class VirtualThreadsThreadSleepClient implements ThreadSleepClient {
     @Override
     public List<String> fetch() {
         try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
-            List<CompletableFuture<String>> futures = IntStream.rangeClosed(1, 3)
-                    .mapToObj(
-                            i -> CompletableFuture.supplyAsync(
-                                    () -> callApi(String.valueOf(i)),
-                                    executorService
-                            )
-                    )
+            List<Future<String>> futures = IntStream.rangeClosed(1, 3)
+                    .mapToObj(i -> (Callable<String>) () -> callApi(String.valueOf(i)))
+                    .map(executorService::submit)
                     .toList();
-
-            try {
-                return futures.stream()
-                        .map(CompletableFuture::join)
-                        .toList();
-            } catch (CompletionException e) {
-                if (e.getCause() instanceof CustomException customException) throw customException;
-                throw e;
-            }
+            return futures.stream()
+                    .map(future -> {
+                        try {
+                            return future.get();
+                        } catch (ExecutionException | InterruptedException e) {
+                            if (e.getCause() instanceof CustomException customException) throw customException;
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .toList();
         }
     }
 

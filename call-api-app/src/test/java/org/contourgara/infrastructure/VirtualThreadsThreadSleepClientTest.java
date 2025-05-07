@@ -106,6 +106,6 @@ class VirtualThreadsThreadSleepClientTest {
         // execute & assert
         assertThatThrownBy(() -> sut.fetch())
                 .isInstanceOf(RuntimeException.class)
-                .isExactlyInstanceOf(CompletionException.class);
+                .isExactlyInstanceOf(CustomException.class);
     }
 }
