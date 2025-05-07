@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
-import java.util.concurrent.CompletionException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.*;
@@ -106,6 +105,6 @@ class CompletableFutureThreadSleepClientTest {
         // execute & assert
         assertThatThrownBy(() -> sut.fetch())
                 .isInstanceOf(RuntimeException.class)
-                .isExactlyInstanceOf(CompletionException.class);
+                .isExactlyInstanceOf(CustomException.class);
     }
 }

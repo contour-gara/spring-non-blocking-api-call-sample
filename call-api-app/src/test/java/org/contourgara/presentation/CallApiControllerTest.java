@@ -3,6 +3,7 @@ package org.contourgara.presentation;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.contourgara.application.AsyncUseCase;
 import org.contourgara.application.CompletableFutureUseCase;
+import org.contourgara.application.VirtualThreadsUseCase;
 import org.contourgara.application.WebClientUseCase;
 import org.contourgara.common.RequestId;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,8 @@ class CallApiControllerTest {
     CompletableFutureUseCase completableFutureUseCase;
     @MockitoBean
     AsyncUseCase asyncUseCase;
+    @MockitoBean
+    VirtualThreadsUseCase virtualThreadsUseCase;
     @MockitoBean
     RequestId requestId;
 
@@ -62,6 +65,16 @@ class CallApiControllerTest {
         given()
                 .when()
                 .get("/async")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void virtualThreadsエンドポイントにアクセスした場合200が返る() {
+        // execute & assert
+        given()
+                .when()
+                .get("/virtual-threads")
                 .then()
                 .statusCode(200);
     }

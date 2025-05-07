@@ -105,7 +105,8 @@ class WebClientThreadSleepClientTest {
 
         // execute & assert
         assertThatThrownBy(() -> sut.fetch())
-                .isExactlyInstanceOf(RuntimeException.class);
+                .isInstanceOf(RuntimeException.class)
+                .isExactlyInstanceOf(CustomException.class);
     }
 
 }
